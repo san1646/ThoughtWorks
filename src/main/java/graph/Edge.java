@@ -1,5 +1,10 @@
 package graph;
 
+/**
+ * 
+ * @author sanket.bharaswadkar
+ *
+ */
 public class Edge {
 
     Integer length;

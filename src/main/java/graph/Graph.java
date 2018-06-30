@@ -3,6 +3,11 @@ package graph;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Weighted directional graph
+ * @author sanket.bharaswadkar
+ *
+ */
 public class Graph {
 
     String name;

@@ -3,6 +3,11 @@ package graph;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author sanket.bharaswadkar
+ *
+ */
 public class Node {
     private String name;
     Map<Node, Integer> adjacentNodes = new HashMap<Node, Integer>();
