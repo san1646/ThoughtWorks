@@ -80,6 +80,14 @@ public class GraphTest {
       Assert.assertEquals(distanceForAED, "NO SUCH ROUTE");
 
       //untested
+      /*System.out.println("find route b/w a-c:");
+      Node a1 = g.getNode("A");
+      Node b1 = g.getNode("C");
+      System.out.println("Nodes: "+a1.getName() + ", "+b1.getName());
+      System.out.println(g.isRoute(a1, b1));*/
       
+      String start = "C";
+      String end= "C";
+      System.out.println("#Path between "+start+", and "+end+" is "+g.countPaths(start, end, 1));
   }
 }

@@ -1,9 +1,12 @@
 package graph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,7 +16,7 @@ import java.util.Set;
  *
  */
 public class Graph {
-
+    static String NO_ROUTE = "NO SUCH ROUTE";
     String name;
     Set<Node> nodes = new HashSet<Node>();
     Set<Edge> edges = new HashSet<Edge>();
@@ -126,7 +129,7 @@ public class Graph {
     public String findRouteDistance(String[] route) {
         List<Node> routeNodes = getNodesFromNames(route);
         if (routeNodes == null) {
-            return "NO SUCH ROUTE";
+            return NO_ROUTE;
         }
 
         Integer routeDistance = 0;
@@ -137,10 +140,125 @@ public class Graph {
             if (from.getOut().contains(to)) {
                 routeDistance += getEdge(from, to).getLength();
             } else {
-                return "NO SUCH ROUTE";
+                return NO_ROUTE;
             }
         }
 
         return routeDistance.toString();
+    }
+
+    public boolean isRoute(Node start, Node end) {
+
+        // Mark all the nodes as not visited
+        // TODO get size of the graph
+        Map<String, Boolean> visited = new HashMap<>();
+
+        // Create a queue for Breadth First Search
+        LinkedList<Node> queue = new LinkedList<Node>();
+
+        // Mark the current node as visited and enqueue it
+        visited.put(start.getName(), true);
+        queue.add(start);
+
+        // 'i' will be used to get all adjacent vertices of a vertex
+        Iterator<Node> i;
+        String route = start.getName();
+        while (queue.size() != 0) {
+            // Dequeue a vertex from queue and print it
+            Node first = queue.poll();
+            System.out.println("in FindRoute : queue: " + first.getName());
+            Node n;
+            i = first.getOut().iterator();
+
+            // Get all adjacent vertices of the dequeued vertex s
+            // If a adjacent has not been visited, then mark it
+            // visited and enqueue it
+            while (i.hasNext()) {
+                n = i.next();
+
+                // If this adjacent node is the destination node,
+                // then return true
+                if (n.equals(end)) {
+                    // route +=n.getName();
+                    return true;
+                }
+
+                // Else, continue to do BFS
+                if (!visited.containsKey(n.getName())) {
+                    visited.put(n.getName(), true);
+                    queue.add(n);
+                    route += n.getName();
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * The number of trips starting at start and ending at end
+     * with max 3 stops
+     * 
+     * @param start
+     * @param end
+     * @return
+     */
+    public int routesStartingAndEnding(Node start, Node end) {
+
+        return 0;
+    }
+
+    /**
+     * Count the number of paths between 2 nodes
+     * 
+     * @param start
+     * @param end
+     * @return
+     */
+    public int countPathHelper(Node start, Node end, Map<String, Boolean> visited, int count) {
+
+        // current node is visited
+        visited.put(start.getName(), true);
+
+        if (start.equals(end)) {
+            count++;
+        } else {
+            Iterator<Node> itr = start.getOut().iterator();
+            while (itr.hasNext()) {
+                Node n = itr.next();
+                if (!visited.containsKey(n.getName()) || !visited.get(n.getName())) {
+                    count = countPathHelper(n, end, visited, count);
+                }
+            }
+        }
+
+        visited.put(start.getName(), false);
+        return count;
+    }
+
+    public int countPaths(String s, String e, int stops) {
+
+        if (stops == 0 && s.equals(e)) {
+            return 1;
+        }
+        if (stops < 0) {
+            return 0;
+        }
+
+        Node start = getNode(s);
+        Node end = getNode(e);
+        if (start.equals(end)) {
+            start = start.getOut().get(0);
+        }
+
+        // Mark all the vertices
+        // as not visited
+        Map<String, Boolean> visited = new HashMap<>();
+
+        // Call the recursive method
+        // to count all paths
+        int count = 0;
+        count = countPathHelper(start, end, visited, count);
+        return count;
     }
 }
