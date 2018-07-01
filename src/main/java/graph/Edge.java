@@ -7,9 +7,9 @@ package graph;
  */
 public class Edge {
 
-    Integer length;
-    Node from;
-    Node to;
+    private Integer length;
+    private Node from;
+    private Node to;
 
     public Integer getLength() {
         return length;
@@ -34,5 +34,32 @@ public class Edge {
     public void setTo(Node to) {
         this.to = to;
     }
-    
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return super.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * (this.from == null ? 0 : this.from.hashCode()) * (this.to == null ? 0 : this.to.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Edge)) {
+            return false;
+        }
+        Edge objEdge = (Edge) obj;
+        if (this.to.equals(objEdge.getTo()) && this.from.equals(objEdge.getFrom())) {
+            return true;
+        }
+        return false;
+    }
 }

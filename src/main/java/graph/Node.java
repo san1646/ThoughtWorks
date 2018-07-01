@@ -1,7 +1,7 @@
 package graph;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -10,33 +10,63 @@ import java.util.Map;
  */
 public class Node {
     private String name;
-    Map<Node, Integer> adjacentNodes = new HashMap<Node, Integer>();
+    List<Node> in = new ArrayList<>();
+    List<Node> out = new ArrayList<>();
 
     public Node(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
-    public Map<Node, Integer> getAdjacentNodes() {
-	return adjacentNodes;
+    public void setInNodes(List<Node> inComingNodes) {
+        this.in = inComingNodes;
     }
 
-    public void setAdjacentNodes(Map<Node, Integer> adjacentNodes) {
-	this.adjacentNodes = adjacentNodes;
+    @Override
+    public String toString() {
+        String temp = "";
+        temp += "[Node: " + name + " : ";
+        temp += " In: ";
+        for (Node inNode : in)
+            temp += inNode.name + " ";
+        temp += "Out: ";
+        for (Node outNode : out)
+            temp += outNode.name + " ";
+        temp += " ]";
+        return temp;
     }
 
-    public void addAdjacentNode(Node node, Integer weight) {
-	if (this.adjacentNodes == null) {
-	    this.adjacentNodes = new HashMap<Node, Integer>();
-	}
-	this.adjacentNodes.put(node, weight);
+    public List<Node> getIn() {
+        return in;
     }
+
+    public void setIn(List<Node> in) {
+        this.in = in;
+    }
+
+    public void addIn(Node in) {
+        this.in.add(in);
+    }
+
+    public List<Node> getOut() {
+        return out;
+    }
+
+    public void setOut(List<Node> out) {
+        this.out = out;
+    }
+
+    public void addOut(Node in) {
+        this.out.add(in);
+    }
+    
+    //TODO equals and hashcode
 
 }
