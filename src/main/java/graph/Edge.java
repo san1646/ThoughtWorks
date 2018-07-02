@@ -38,7 +38,12 @@ public class Edge {
     @Override
     public String toString() {
         // TODO Auto-generated method stub
-        return super.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("[ ");
+        builder.append(this.getFrom().getName() + this.getTo().getName() +this.getLength());
+
+        builder.append(" ]");
+        return builder.toString();
     }
 
     @Override

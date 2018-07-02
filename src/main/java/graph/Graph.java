@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -61,14 +62,12 @@ public class Graph {
             builder.append(" ");
             builder.append(node.toString());
             builder.append(", ");
-
         }
 
+        builder.append("Edges: ");
         for (Edge edge : edges) {
-            builder.append("Edge:");
-            builder.append(edge.getLength());
+            builder.append(edge.toString());
             builder.append(", ");
-
         }
 
         builder.append("] ");
@@ -137,7 +136,7 @@ public class Graph {
         for (int i = 0; i < routeNodes.size() - 1; i++) {
             Node from = routeNodes.get(i);
             Node to = routeNodes.get(i + 1);
-            if (from.getOut().contains(to)) {
+            if (from.getOut().keySet().contains(to)) {
                 routeDistance += getEdge(from, to).getLength();
             } else {
                 return NO_ROUTE;
@@ -168,7 +167,7 @@ public class Graph {
             Node first = queue.poll();
             System.out.println("in FindRoute : queue: " + first.getName());
             Node n;
-            i = first.getOut().iterator();
+            i = first.getOut().keySet().iterator();
 
             // Get all adjacent vertices of the dequeued vertex s
             // If a adjacent has not been visited, then mark it
@@ -215,7 +214,7 @@ public class Graph {
      * @param end
      * @return
      */
-    public int countPathHelper(Node start, Node end, Map<String, Boolean> visited, int count) {
+    int countPathHelper(Node start, Node end, Map<String, Boolean> visited, int count) {
 
         // current node is visited
         visited.put(start.getName(), true);
@@ -223,7 +222,7 @@ public class Graph {
         if (start.equals(end)) {
             count++;
         } else {
-            Iterator<Node> itr = start.getOut().iterator();
+            Iterator<Node> itr = start.getOut().keySet().iterator();
             while (itr.hasNext()) {
                 Node n = itr.next();
                 if (!visited.containsKey(n.getName()) || !visited.get(n.getName())) {
@@ -236,6 +235,14 @@ public class Graph {
         return count;
     }
 
+    /**
+     * Counts the paths between start and end nodes
+     * 
+     * @param s
+     * @param e
+     * @param stops
+     * @return
+     */
     public int countPaths(String s, String e, int stops) {
 
         if (stops == 0 && s.equals(e)) {
@@ -248,7 +255,7 @@ public class Graph {
         Node start = getNode(s);
         Node end = getNode(e);
         if (start.equals(end)) {
-            start = start.getOut().get(0);
+            start = start.getOut().keySet().iterator().next();
         }
 
         // Mark all the vertices
@@ -261,4 +268,117 @@ public class Graph {
         count = countPathHelper(start, end, visited, count);
         return count;
     }
+
+    public int countPathsWithStops(String s, String e, int stop, Map<String, Boolean> visited) {
+        // Base cases
+        if (stop == 0 && s.equalsIgnoreCase(e)) {
+            return 1;
+        }
+
+        if (stop <= 0) {
+            return 0;
+        }
+
+        Node start = getNode(s);
+        Node end = getNode(e);
+
+        int count = 0;
+
+        visited.put(start.getName(), true);
+
+        if (start.equals(end)) {
+            count++;
+        } else {
+            Iterator<Node> itr = start.getOut().keySet().iterator();
+            while (itr.hasNext()) {
+                Node n = itr.next();
+                if (!visited.containsKey(n.getName()) || !visited.get(n.getName())) {
+                    count += countPathsWithStops(n.getName(), end.getName(), stop - 1, visited);
+                }
+            }
+        }
+
+        visited.put(start.getName(), false);
+
+        return count;
+    }
+
+    /**
+     * This uses Djikstra's algorithm
+     * 
+     * @param source
+     * @return
+     */
+    public void calculateShortestPath(Node source) {
+        source.setDistance(0);
+
+        Set<Node> settledNodes = new HashSet<>();
+        Set<Node> unsettledNodes = new HashSet<>();
+
+        unsettledNodes.add(source);
+
+        while (unsettledNodes.size() != 0) {
+            Node currentNode = getLowestDistanceNode(unsettledNodes);
+            unsettledNodes.remove(currentNode);
+            for (Entry<Node, Integer> nodeVal : currentNode.getOut().entrySet()) {
+                Node adjNode = nodeVal.getKey();
+                //Integer edgeLength = nodeVal.getValue();
+                //get the length for current node and the nodeVal
+                Integer edgeLength = getEdge(currentNode, nodeVal.getKey()).getLength();
+                if (!settledNodes.contains(adjNode)) {
+                    calculateMinimumDistance(adjNode, edgeLength, currentNode);
+                    unsettledNodes.add(adjNode);
+                }
+            }
+            settledNodes.add(currentNode);
+        }
+    }
+
+    private static Node getLowestDistanceNode(Set<Node> unsettledNodes) {
+        Node closestNode = unsettledNodes.iterator().next();
+        int lowestDistance = Integer.MAX_VALUE;
+        for (Node node : unsettledNodes) {
+            int distance = node.getDistance();
+            if (distance < lowestDistance) {
+                lowestDistance = distance;
+                closestNode = node;
+            }
+        }
+        return closestNode;
+    }
+
+    private static void calculateMinimumDistance(Node currNode,
+            Integer edgeLength, Node sourceNode) {
+        Integer sourceDistance = sourceNode.getDistance();
+        if (sourceDistance + edgeLength < currNode.getDistance()) {
+            currNode.setDistance(sourceDistance + edgeLength);
+            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
+            shortestPath.add(sourceNode);
+            currNode.setShortestPath(shortestPath);
+        }
+    }
+
+    public List<String> getShortestPath(Node target) {
+        List<String> path = new ArrayList<String>();
+
+        /*
+         * // check for no path found
+         * if (target.getShortestPath()==Integer.MAX_VALUE)
+         * {
+         * path.add("No path found");
+         * return path;
+         * }
+         * 
+         * // loop through the vertices from end target
+         * for (Vertex v = target; v !=null; v = v.previous)
+         * {
+         * path.add(v.value + " : cost : " + v.minDistance);
+         * }
+         * 
+         * // flip the list
+         * Collections.reverse(path);
+         */
+        return path;
+    }
+
 }
