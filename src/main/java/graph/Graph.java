@@ -225,7 +225,7 @@ public class Graph {
      * @param end
      * @return
      */
-    int countPathHelper(Node start, Node end, Map<String, Boolean> visited, int count) {
+    private int countPathHelper(Node start, Node end, Map<String, Boolean> visited, int count) {
         // current node is visited
         visited.put(start.getName(), true);
 
@@ -262,9 +262,7 @@ public class Graph {
 
         Node start = getNode(s);
         Node end = getNode(e);
-        if (start.equals(end)) {
-            start = start.getOut().keySet().iterator().next();
-        }
+        
 
         // Mark all the vertices
         // as not visited
@@ -273,12 +271,20 @@ public class Graph {
         // Call the recursive method
         // to count all paths
         int count = 0;
-        count = countPathHelper(start, end, visited, count);
+        if (start.equals(end)) {
+            Iterator<Node> itr = start.getOut().keySet().iterator();
+            while (itr.hasNext()) {
+                start = itr.next();
+                count = countPathHelper(start, end, visited, count);
+            }
+        }else {
+            count = countPathHelper(start, end, visited, count);
+        }
+        
         return count;
     }
 
-    public int countPathsWithStops(String s, String e, int stop, Map<String, Boolean> visited) {
-        // Base cases
+    public int countPathsWithStops(String s, String e, int stop) {
         if (stop == 0 && s.equalsIgnoreCase(e)) {
             return 1;
         }
@@ -289,7 +295,22 @@ public class Graph {
 
         Node start = getNode(s);
         Node end = getNode(e);
-
+        int count = 0;
+        Map<String, Boolean> visited = new HashMap<>();
+        
+        if (start.equals(end)) {
+            Iterator<Node> itr = start.getOut().keySet().iterator();
+            while (itr.hasNext()) {
+                start = itr.next();
+                count = countPathsWithStopsHelper(start, end, 3, visited);
+            }
+        }else {
+            count = countPathsWithStopsHelper(start, end, 3, visited);
+        }
+        
+        return count;
+    }
+    private int countPathsWithStopsHelper(Node start, Node end, int stops, Map<String, Boolean> visited) {
         int count = 0;
 
         visited.put(start.getName(), true);
@@ -301,7 +322,7 @@ public class Graph {
             while (itr.hasNext()) {
                 Node n = itr.next();
                 if (!visited.containsKey(n.getName()) || !visited.get(n.getName())) {
-                    count += countPathsWithStops(n.getName(), end.getName(), stop - 1, visited);
+                    count += countPathsWithStopsHelper(n, end, stops - 1, visited);
                 }
             }
         }
@@ -436,11 +457,18 @@ public class Graph {
      * @param target
      * @return
      */
-    public List<Node> getShortestPathTo(String t) {
+    public List<Node> getShortestPathTo(String s, String t) {
         Node target = getNode(t);
+        Node source = getNode(s);
         List<Node> path = new ArrayList<Node>();
-        for (Node node = target; node != null; node = node.previous)
+
+        for (Node node = target; node != null; node = node.previous) {
             path.add(node);
+            if (node.equals(source)) {
+                Collections.reverse(path);
+                return path;
+            }
+        }
 
         Collections.reverse(path);
         return path;
@@ -490,6 +518,7 @@ public class Graph {
                 System.out.print(" " + p.getName());
                 cost += p.getDistance();
             }
+            System.out.println();
         }
 
         if (cost >= 30) {
