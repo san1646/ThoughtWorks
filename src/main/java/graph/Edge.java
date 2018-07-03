@@ -40,7 +40,7 @@ public class Edge {
         // TODO Auto-generated method stub
         StringBuilder builder = new StringBuilder();
         builder.append("[ ");
-        builder.append(this.getFrom().getName() + this.getTo().getName() +this.getLength());
+        builder.append(this.getFrom().getName() + this.getTo().getName() + this.getLength());
 
         builder.append(" ]");
         return builder.toString();

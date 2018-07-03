@@ -2,6 +2,8 @@ package graph;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -47,13 +49,14 @@ public class GraphTest {
         g.addToGraph(c, e, 2);
         g.addToGraph(e, b, 3);
         g.addToGraph(a, e, 7);
-        
+
         return g;
     }
+
     @Test
     public void addNode() {
         // throw new RuntimeException("Test not implemented");
-        
+
         Graph graph = buildGraph();
         System.out.println(graph.toString());
 
@@ -127,23 +130,88 @@ public class GraphTest {
         end = "C";
         System.out.println(
                 " -- Number of paths between " + start + ", and " + end + " is " + graph.countPaths(start, end, 1));
-        
-        
-        
-        
+
         start = "A";
         end = "C";
         Map<String, Boolean> visited = new HashMap<>();
-        System.out.println("7. The number of trips starting at A and ending at C with exactly 4 stops.  In the sample data below, there are three such trips: A to C (via B,C,D); A to C (via D,C,D); and A to C (via D,E,B).");
         System.out.println(
-                " -- Number of paths between " + start + ", and " + end + " with max 4 stops- " + graph.countPathsWithStops(start, end, 4, visited));
+                "7. The number of trips starting at A and ending at C with exactly 4 stops.  In the sample data below, there are three such trips: A to C (via B,C,D); A to C (via D,C,D); and A to C (via D,E,B).");
+        System.out.println(
+                " -- Number of paths between " + start + ", and " + end + " with max 4 stops- "
+                        + graph.countPathsWithStops(start, end, 4, visited));
     }
-    
+
+    /**
+     * Problem 8
+     */
     @Test
     public void graphShortestPath() {
+        System.out.println("***");
         Graph graph = buildGraph();
         Node source = graph.getNode("A");
-        graph.calculateShortestPath(source);
-        System.out.println(graph.toString());        
+        // graph.calculateShortestPath(source);
+        // System.out.println(graph.toString());
+
+        String start = "A";
+        String end = "C";
+        // Integer minDist = graph.getLengthOfShortestPath(start, end);
+        graph.setDijkstras(start);
+        System.out.println(graph.toString());
+        List<Node> path = graph.getShortestPathTo(end);
+        System.out.println("8. The length of the shortest route (in terms of distance to travel) from A to C.");
+        Integer minDist = 0;
+        for (Node p : path) {
+            System.out.print(" " + p.getName());
+            minDist += p.getDistance();
+        }
+        System.out.println();
+        System.out.println("Min distance from " + start + " to " + end + " is " + minDist);
+    }
+
+    /**
+     * Problem 9
+     */
+    @Test
+    public void graphShortestPathBtoB() {
+        System.out.println("***");
+        Graph graph = buildGraph();
+
+        String start = "B";
+        String end = "B";
+        graph.setDijkstras(start);
+        System.out.println(graph.toString());
+        List<Node> path = graph.getShortestPathTo(end);
+        System.out.println("9. The length of the shortest route (in terms of distance to travel) from B to B.");
+        Integer minDist = 0;
+        for (Node p : path) {
+            System.out.print(" " + p.getName());
+            minDist += p.getDistance();
+        }
+        System.out.println();
+        System.out.println("Min distance from " + start + " to " + end + " is " + minDist);
+    }
+
+    /**
+     * Problem 10
+     */
+    @Test
+    public void testGetAllRoutesWithDistance() {
+        System.out.println("***");
+        Graph graph = buildGraph();
+
+        String start = "A";
+        String end = "C";
+
+        // set distances
+        graph.setDijkstras(start);
+        System.out.println(graph.toString());
+        List<Node> paths = graph.pathsWithMaxCost(start, end);
+        System.out.println(
+                " -- 10 Number of paths between " + start + ", and " + end + " is ");
+
+        for (Node p : paths) {
+            System.out.print(" " + p.getName());
+        }
+
     }
 }
