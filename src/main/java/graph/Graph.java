@@ -338,6 +338,7 @@ public class Graph {
      * @param source
      * @return
      */
+    @Deprecated
     public void calculateShortestPath(Node source) {
         source.setDistance(0);
 
@@ -362,6 +363,12 @@ public class Graph {
         }
     }
 
+    /**
+     * Finds the node from unsettled set with lowest distance to the source
+     * @param unsettledNodes
+     * @return
+     */
+    @Deprecated
     private static Node getLowestDistanceNode(Set<Node> unsettledNodes) {
         Node closestNode = unsettledNodes.iterator().next();
         int lowestDistance = Integer.MAX_VALUE;
@@ -375,6 +382,13 @@ public class Graph {
         return closestNode;
     }
 
+    /**
+     * Get the min distance from current node to source
+     * @param currNode
+     * @param edgeLength
+     * @param sourceNode
+     */
+    @Deprecated
     private static void calculateMinimumDistance(Node currNode,
             Integer edgeLength, Node sourceNode) {
         Integer sourceDistance = sourceNode.getDistance();
@@ -386,17 +400,23 @@ public class Graph {
         }
     }
 
+    /**
+     * Find the shortest path from start to end
+     * returns the weight of the path
+     * @param start
+     * @param end
+     * @return
+     */
+    @Deprecated
     public int getLengthOfShortestPath(String start, String end) {
         Node a = getNode("A");
         calculateShortestPath(a);
 
-        // LinkedList<Node> path = new LinkedList<Node>();
         Node startNode = getNode(start);
         Node n = startNode;
         if (!n.getOut().keySet().iterator().hasNext()) {
             return 0;
         }
-        // path.add(n);
         Integer distance = 0;
 
         // while node has outgoing connections...
@@ -426,7 +446,11 @@ public class Graph {
         return distance;
     }
 
-    public void setDijkstras(String s) {
+    /**
+     * Adds weights using Dijkstra's algorithm
+     * @param s
+     */
+    public void setDijkstrasWeights(String s) {
         Node source = getNode(s);
         source.setDistance(0);
         PriorityQueue<Node> nodeQ = new PriorityQueue<Node>();
@@ -452,7 +476,7 @@ public class Graph {
     }
 
     /**
-     * Finds the path to the target using {@link #setDijkstras(String)}
+     * Finds the path to the target using {@link #setDijkstrasWeights(String)}
      * 
      * @param target
      * @return
@@ -474,24 +498,17 @@ public class Graph {
         return path;
     }
 
+    /**
+     * Get path with max cost
+     * @param s
+     * @param e
+     * @return
+     */
     public List<Node> pathsWithMaxCost(String s, String e) {
 
         List<Node> paths = new ArrayList<>();
         Node start = getNode(s);
         Node end = getNode(e);
-        /*
-         * if (s.equals(e)) {
-         * paths.add(start);
-         * paths.add(end);
-         * return paths;
-         * }
-         */
-
-        /*
-         * if (start.equals(end)) {
-         * start = start.getOut().keySet().iterator().next();
-         * }
-         */
 
         // Mark all the nodes as not visited
         Map<String, Boolean> visited = new HashMap<>();
@@ -525,8 +542,6 @@ public class Graph {
             return paths;
         }
 
-        // Recur for all the vertices
-        // adjacent to current vertex
         for (Node n : start.getOut().keySet()) {
             if (!visited.containsKey(n.getName()) || !visited.get(n.getName())) {
 

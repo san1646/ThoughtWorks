@@ -2,7 +2,6 @@ package graph;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.testng.Assert;
@@ -57,7 +56,7 @@ public class GraphTest {
      * Problem 1
      */
     @Test(priority=1)
-    public void testRouteForABC() {
+    public void testRouteForABCProblem1() {
         Graph graph = buildGraph();
         System.out.println("***");
         System.out.println(graph.toString());
@@ -73,7 +72,7 @@ public class GraphTest {
      * Problem 2
      */
     @Test(priority=2)
-    public void testRouteForAD() {
+    public void testRouteForADProblem2() {
         Graph graph = buildGraph();
         System.out.println("***");
         //System.out.println(graph.toString());
@@ -90,7 +89,7 @@ public class GraphTest {
      * Problem 3
      */
     @Test(priority=3)
-    public void testRouteForADC() {
+    public void testRouteForADCProblem3() {
         Graph graph = buildGraph();
         System.out.println("***");
         //System.out.println(graph.toString());
@@ -108,7 +107,7 @@ public class GraphTest {
      * Problem 4
      */
     @Test(priority=4)
-    public void testRouteForAEBCD() {
+    public void testRouteForAEBCDProblem4() {
         Graph graph = buildGraph();
         System.out.println("***");
         //System.out.println(graph.toString());
@@ -125,7 +124,7 @@ public class GraphTest {
      * Problem 5
      */
     @Test(priority=5)
-    public void testRouteForAED() {
+    public void testRouteForAEDProblem5() {
         Graph graph = buildGraph();
         System.out.println("***");
         //System.out.println(graph.toString());
@@ -159,7 +158,8 @@ public class GraphTest {
     }
     
     /**
-     * Problem 7
+     * Problem 7 
+     * Not passing as paths found is 4
      */
     @Test(priority=7)
     public void testRouteForProblem7() {
@@ -194,7 +194,7 @@ public class GraphTest {
         String start = "A";
         String end = "C";
         // Integer minDist = graph.getLengthOfShortestPath(start, end);
-        graph.setDijkstras(start);
+        graph.setDijkstrasWeights(start);
         //System.out.println(graph.toString());
         List<Node> path = graph.getShortestPathTo(start, end);
         System.out.println("8. The length of the shortest route (in terms of distance to travel) from A to C.");
@@ -210,15 +210,16 @@ public class GraphTest {
 
     /**
      * Problem 9
+     * Not passing as distance to shortest route for same node is found to be 0
      */
     @Test(priority=9)
-    public void graphShortestPathBtoB() {
+    public void graphShortestPathBtoBProblem9() {
         System.out.println("***");
         Graph graph = buildGraph();
 
         String start = "B";
         String end = "B";
-        graph.setDijkstras(start);
+        graph.setDijkstrasWeights(start);
         //System.out.println(graph.toString());
         List<Node> path = graph.getShortestPathTo(start, end);
         System.out.println("9. The length of the shortest route (in terms of distance to travel) from B to B.");
@@ -234,9 +235,10 @@ public class GraphTest {
 
     /**
      * Problem 10
+     * Not passing as no route found for same node
      */
     @Test(priority=10)
-    public void testGetAllRoutesFromCToCWithDistance() {
+    public void testGetAllRoutesFromCToCWithDistanceProblem10() {
         
         Graph graph = buildGraph();
 
@@ -244,7 +246,7 @@ public class GraphTest {
         String end = "C";
 
         // set distances
-        graph.setDijkstras(start);
+        graph.setDijkstrasWeights(start);
         System.out.println("***");
         //System.out.println(graph.toString());
         List<Node> paths = graph.pathsWithMaxCost(start, end);
